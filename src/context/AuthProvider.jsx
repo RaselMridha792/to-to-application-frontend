@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import {createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth";
+import {createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import auth from "../firebase/firebase.init";
 import { GoogleAuthProvider } from "firebase/auth";
 export const AuthContext = createContext();
@@ -50,6 +50,11 @@ const AuthProvider = ({ children }) => {
       })
 
 
+      const logOutUser = ()=>{
+        setLoader(true);
+        return signOut(auth)
+      }
+
 
   const authInfo = {
       changeColor,
@@ -60,6 +65,7 @@ const AuthProvider = ({ children }) => {
       loader,
       user,
       updateUser,
+      logOutUser,
   };
   return (
     <>
