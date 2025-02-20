@@ -1,7 +1,7 @@
-import { useContext, useState } from "react";
-import { CiSquareChevDown } from "react-icons/ci";
+import { useState } from "react";
 
-const AddTask = ({user}) => {
+
+const AddTask = ({user, handleCloseModal}) => {
       const [taskName, setTaskName] = useState("")
       const [descriptionName, setDescriptionName] = useState("")
       const [error1, setError1] = useState("");
@@ -34,10 +34,19 @@ const AddTask = ({user}) => {
             e.preventDefault()
             const email = user.email;
             const form = e.target;
+            const date = new Intl.DateTimeFormat("en-GB", {
+                  day: '2-digit',
+                  month: 'short',
+                  year: 'numeric',
+                  hour:'2-digit',
+                  minute: '2-digit',
+                  hour12: true,
+            }).format(new Date())
             const taskName = form.taskName.value;
             const description = form.description.value;
             const category = form.category.value
-            console.log({taskName, description, category, email});
+            console.log({taskName, description, category, email, date});
+            handleCloseModal()
       }
   return (
     <>
@@ -59,6 +68,7 @@ const AddTask = ({user}) => {
               maxLength={51}
               placeholder="Enter Task Name"
               className="input input-bordered"
+              required
               id=""
             />
             {error1 && <span className="text-red-500">{error1}</span>}
@@ -74,7 +84,8 @@ const AddTask = ({user}) => {
               onChange={handleDescriptionLimit}
               maxLength={201}
               placeholder="Enter Task Name"
-              className="input input-bordered h-40"
+              required
+              className="input input-bordered h-20"
               id=""
             />
             {error2 && <span className="text-red-500">{error2}</span>}
@@ -82,7 +93,7 @@ const AddTask = ({user}) => {
           <div>
             <span>select category: </span>
             <select className="border p-3 rounded-xl" required name="category" id="">
-                  <option value="to do" selected>To Do</option>
+                  <option value="to do" >To Do</option>
                   <option value="pending">Pending</option>
                   <option value="done">Done</option>
             </select>

@@ -2,25 +2,41 @@ import { FaEdit } from "react-icons/fa";
 import AddTask from "../../components/AddTask";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthProvider";
+import { IoMdClose } from "react-icons/io";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const Homepage = () => {
-  const {user} = useContext(AuthContext)
+  const { user } = useContext(AuthContext);
+  const axiosPublic = useAxiosPublic();
+
+  const handleCloseModal = () => {
+    document.getElementById("my_modal_4").close();
+  };
+
+  const handleSaveTask = (task) =>{
+    axiosPublic.post('/user/task', task)
+    .then(res =>{
+      console.log(res)
+    }).catch(error =>{
+      console.log(error)
+    })
+  }
   return (
     <>
       <div className="max-w-screen-2xl mx-auto px-5">
         <div className="my-5 flex items-center justify-center">
-          <button onClick={() => document.getElementById("my_modal_4").showModal()} className="btn btn-neutral">
+          <button
+            onClick={() => document.getElementById("my_modal_4").showModal()}
+            className="btn btn-neutral"
+          >
             <FaEdit></FaEdit> Add New Task
           </button>
         </div>
         <dialog id="my_modal_4" className="modal">
           <div className="modal-box w-11/12 max-w-5xl">
-          <AddTask user={user}></AddTask>
-            <div className="modal-action">
-              <form method="dialog">
-                {/* if there is a button, it will close the modal */}
-                <button className="btn">Add Task</button>
-              </form>
+            <AddTask user={user} handleCloseModal={handleCloseModal}></AddTask>
+            <div className="flex items-center justify-end">
+              <button onClick={handleCloseModal} className="btn btn-error"><IoMdClose /></button>
             </div>
           </div>
         </dialog>
