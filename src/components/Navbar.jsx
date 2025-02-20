@@ -1,10 +1,11 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthProvider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Navbar = () => {
   const { changeColor, setChangeColor, user, logOutUser} = useContext(AuthContext);
+  const navigate = useNavigate()
 
   const handleSignOut = ()=>{
     logOutUser()
@@ -16,6 +17,8 @@ const Navbar = () => {
         showConfirmButton: false,
         timer: 1500,
       })
+      navigate('/entry-page')
+
     }).catch(error =>{
       console.log(error)
     })
@@ -112,8 +115,8 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <Link to="/login" className="btn">
-                    Join Now
+                  <Link to="/entry-page" className="btn btn-primary">
+                    Get Started
                   </Link>
                 </>
               )}
