@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthProvider";
 import Swal from "sweetalert2";
+import { FaGoogle } from "react-icons/fa";
 
 const Register = () => {
   const { RegisterUser, LoginWithGoogle } = useContext(AuthContext);
@@ -33,6 +34,25 @@ const Register = () => {
     })
   };
 
+  const handleGoogleLogin = () =>{
+      LoginWithGoogle()
+      .then(result =>{
+            console.log('successfully signed Up',result)
+            Swal.fire({
+                  title: "Success",
+                  text: "Successfully Signed Up",
+                  icon: "success"
+                });
+                navigate('/')
+      }).catch(err =>{
+            console.log(err.message)
+      Swal.fire({
+            title: "something went wrong",
+            text: err.message,
+            icon: "error"
+          });
+      })
+  }
 
   return (
     <>
@@ -92,6 +112,9 @@ const Register = () => {
               </div>
               <div className="form-control mt-6">
                 <button className="btn btn-primary">Register</button>
+              </div>
+              <div className="w-full mt-4">
+                <button onClick={handleGoogleLogin} className="w-full btn btn-outline"><FaGoogle /> Sign Up With Google</button>
               </div>
               <p>
                 Already have an account?{" "}

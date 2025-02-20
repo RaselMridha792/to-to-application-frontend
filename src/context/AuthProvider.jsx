@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import {createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import auth from "../firebase/firebase.init";
 import { GoogleAuthProvider } from "firebase/auth";
@@ -21,6 +21,10 @@ const AuthProvider = ({ children }) => {
         return signInWithPopup(auth, provider)
       }
 
+
+      useEffect(()=>{
+        const unSubscribe
+      })
 
 
 
