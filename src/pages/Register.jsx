@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { FaGoogle } from "react-icons/fa";
 
 const Register = () => {
-  const { RegisterUser, LoginWithGoogle } = useContext(AuthContext);
+  const { RegisterUser, LoginWithGoogle, updateUser } = useContext(AuthContext);
   const navigate = useNavigate()
 
   const handleSignUp = (e) => {
@@ -17,6 +17,12 @@ const Register = () => {
     const password = form.password.value;
     RegisterUser(email, password)
     .then(result =>{
+      updateUser(name, photo)
+      .then(result =>{
+            console.log(result);
+      }).catch(error =>{
+            console.log(error);
+      })
       console.log('successfully signed Up',result)
       Swal.fire({
             title: "Success",
