@@ -14,9 +14,10 @@ const Homepage = () => {
   };
 
   const handleSaveTask = (task) =>{
-    axiosPublic.post('/user/task', task)
+    axiosPublic.post('/user/to-do', task)
     .then(res =>{
       console.log(res)
+      handleCloseModal()
     }).catch(error =>{
       console.log(error)
     })
@@ -34,7 +35,7 @@ const Homepage = () => {
         </div>
         <dialog id="my_modal_4" className="modal">
           <div className="modal-box w-11/12 max-w-5xl">
-            <AddTask user={user} handleCloseModal={handleCloseModal}></AddTask>
+            <AddTask handleSaveTask={handleSaveTask} user={user}></AddTask>
             <div className="flex items-center justify-end">
               <button onClick={handleCloseModal} className="btn btn-error"><IoMdClose /></button>
             </div>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 
-const AddTask = ({user, handleCloseModal}) => {
+const AddTask = ({user, handleSaveTask}) => {
       const [taskName, setTaskName] = useState("")
       const [descriptionName, setDescriptionName] = useState("")
       const [error1, setError1] = useState("");
@@ -46,7 +46,8 @@ const AddTask = ({user, handleCloseModal}) => {
             const description = form.description.value;
             const category = form.category.value
             console.log({taskName, description, category, email, date});
-            handleCloseModal()
+            const task = {taskName, description, category, email, date}
+            handleSaveTask(task)
       }
   return (
     <>
