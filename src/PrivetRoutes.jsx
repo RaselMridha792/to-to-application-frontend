@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "./context/AuthProvider";
 import { Navigate } from "react-router-dom";
+import EntryPage from "./EntryPage";
 
 const PrivetRoutes = ({children}) => {
   const {user, loader} = useContext(AuthContext);
@@ -12,6 +13,9 @@ const PrivetRoutes = ({children}) => {
         </div>
       </>
     );
+  }
+  if(!user){
+      return <EntryPage></EntryPage>
   }
   if (user) {
     return children;

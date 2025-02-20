@@ -24,7 +24,7 @@ const AuthProvider = ({ children }) => {
             setLoader(false);
           }else{
             setUser(null);
-            setLoader(true);
+            setLoader(false);
           }
         });
         return ()=>{
