@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthProvider";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
       const {changeColor, setChangeColor} = useContext(AuthContext);
@@ -56,7 +57,7 @@ const Navbar = () => {
   </div>
   <div className="navbar-end gap-5">
   <input type="checkbox" onChange={()=>setChangeColor(!changeColor)} value="dark" className="toggle theme-controller" />
-    <a className="btn">Button</a>
+    <Link to="/login" className="btn">Join Now</Link>
   </div>
 </div>
       </div>
