@@ -9,7 +9,6 @@ import PrivetRoutes from "./PrivetRoutes.jsx";
 import EntryPage from "./EntryPage.jsx";
 import {
   QueryClient,
-  QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
 const router = createBrowserRouter([

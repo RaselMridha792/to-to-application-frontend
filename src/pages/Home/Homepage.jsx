@@ -4,6 +4,8 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/AuthProvider";
 import { IoMdClose } from "react-icons/io";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
+import Swal from "sweetalert2";
+import TaskManagement from "../../components/TaskManagement";
 
 const Homepage = () => {
   const { user } = useContext(AuthContext);
@@ -14,11 +16,21 @@ const Homepage = () => {
   };
 
   const handleSaveTask = (task) =>{
-    axiosPublic.post('/user/to-do', task)
+    axiosPublic.post('/tasks', task)
     .then(res =>{
       console.log(res)
+      Swal.fire({
+        title: "Successfully added task",
+        icon: "success",
+        draggable: true
+      });
       handleCloseModal()
     }).catch(error =>{
+      Swal.fire({
+        icon: "error",
+        title: error.message,
+        text: "Something went wrong!",
+      });
       console.log(error)
     })
   }
@@ -42,7 +54,10 @@ const Homepage = () => {
           </div>
         </dialog>
         <div className="divider"></div>
-        <div></div>
+        <div>
+
+          <TaskManagement></TaskManagement>
+        </div>
       </div>
     </>
   );
