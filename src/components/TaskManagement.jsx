@@ -13,7 +13,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { closestCorners, DndContext } from "@dnd-kit/core";
+import { closestCorners, DndContext, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
 
 const TaskManagement = () => {
   const [data, refetch, isLoading] = useGetTask();
@@ -76,8 +76,13 @@ const TaskManagement = () => {
     })
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(TouchSensor)
+  )
+
   return (
-    <DndContext collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} collisionDetection={closestCorners}  onDragEnd={handleDragEnd}>
       <div className="grid grid-cols-1 md:grid-cols-2 text-white lg:grid-cols-3 gap-5">
         <dialog id="my_modal_5" className="modal">
           <div className="modal-box w-11/12 max-w-5xl">
