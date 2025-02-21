@@ -9,7 +9,7 @@ const UpdateTask = ({ updateTaskId, data, refetch, handleCloseModal }) => {
   const [error2, setError2] = useState("");
   const [category, setCategory] = useState("to do");
 
-  console.log(updateTaskId);
+  
   const updateAble = data?.find((datas) => datas._id == updateTaskId);
   const axiosPublic = useAxiosPublic();
 

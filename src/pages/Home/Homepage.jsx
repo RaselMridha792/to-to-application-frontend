@@ -7,6 +7,7 @@ import useAxiosPublic from "../../hooks/useAxiosPublic";
 import Swal from "sweetalert2";
 import TaskManagement from "../../components/TaskManagement";
 import useGetTask from "../../hooks/useGetTask";
+import { closestCorners, DndContext } from "@dnd-kit/core";
 
 const Homepage = () => {
   const { user } = useContext(AuthContext);
@@ -17,26 +18,28 @@ const Homepage = () => {
     document.getElementById("my_modal_4").close();
   };
 
-  const handleSaveTask = (task) =>{
-    axiosPublic.post('/tasks', task)
-    .then(res =>{
-      console.log(res)
-      Swal.fire({
-        title: "Successfully added task",
-        icon: "success",
-        draggable: true
+  const handleSaveTask = (task) => {
+    axiosPublic
+      .post("/tasks", task)
+      .then((res) => {
+        console.log(res);
+        Swal.fire({
+          title: "Successfully added task",
+          icon: "success",
+          draggable: true,
+        });
+        refetch();
+        handleCloseModal();
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: error.message,
+          text: "Something went wrong!",
+        });
+        console.log(error);
       });
-      refetch();
-      handleCloseModal()
-    }).catch(error =>{
-      Swal.fire({
-        icon: "error",
-        title: error.message,
-        text: "Something went wrong!",
-      });
-      console.log(error)
-    })
-  }
+  };
   return (
     <>
       <div className="max-w-screen-2xl mx-auto px-5">
@@ -52,14 +55,17 @@ const Homepage = () => {
           <div className="modal-box w-11/12 max-w-5xl">
             <AddTask handleSaveTask={handleSaveTask} user={user}></AddTask>
             <div className="flex items-center justify-end">
-              <button onClick={handleCloseModal} className="btn btn-error"><IoMdClose /></button>
+              <button onClick={handleCloseModal} className="btn btn-error">
+                <IoMdClose />
+              </button>
             </div>
           </div>
         </dialog>
         <div className="divider"></div>
         <div>
-
-          <TaskManagement></TaskManagement>
+          <DndContext>
+            <TaskManagement></TaskManagement>
+          </DndContext>
         </div>
       </div>
     </>
