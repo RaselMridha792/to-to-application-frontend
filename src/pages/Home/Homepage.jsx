@@ -6,10 +6,12 @@ import { IoMdClose } from "react-icons/io";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import Swal from "sweetalert2";
 import TaskManagement from "../../components/TaskManagement";
+import useGetTask from "../../hooks/useGetTask";
 
 const Homepage = () => {
   const { user } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
+  const [data, refetch, isLoading] = useGetTask();
 
   const handleCloseModal = () => {
     document.getElementById("my_modal_4").close();
@@ -24,6 +26,7 @@ const Homepage = () => {
         icon: "success",
         draggable: true
       });
+      refetch();
       handleCloseModal()
     }).catch(error =>{
       Swal.fire({
