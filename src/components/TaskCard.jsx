@@ -1,6 +1,6 @@
 import { FaEdit, FaTrash } from "react-icons/fa";
 
-const TaskCard = ({ task, handleDelete }) => {
+const TaskCard = ({ task, handleDelete, handleUpdateTask }) => {
   const { taskName, description, date, _id } = task;
   return (
     <>
@@ -12,7 +12,7 @@ const TaskCard = ({ task, handleDelete }) => {
         </div>
         <div className="space-x-2">
             <button onClick={()=>handleDelete(_id)} className="btn btn-sm btn-error"><FaTrash></FaTrash></button>
-            <button  className="btn btn-sm btn-warning"><FaEdit></FaEdit></button>
+            <button onClick={()=>handleUpdateTask(_id)}  className="btn btn-sm btn-warning"><FaEdit></FaEdit></button>
         </div>
       </div>
     </>
