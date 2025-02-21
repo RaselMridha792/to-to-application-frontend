@@ -4,7 +4,7 @@ const TaskCard = ({ task, handleDelete, handleUpdateTask }) => {
   const { taskName, description, date, _id } = task;
   return (
     <>
-      <div draggable className="border rounded-lg bg-gray-300 py-2 px-2 flex items-start justify-between">
+      <div draggable className="border rounded-lg bg-gray-600 py-2 px-2 flex items-start justify-between">
         <div>
           <h1 className=" font-bold text-2xl ">{taskName}</h1>
           <p className="text-sm">{date}</p>

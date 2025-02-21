@@ -7,6 +7,7 @@ import useAxiosPublic from "../hooks/useAxiosPublic";
 import { IoMdClose } from "react-icons/io";
 import UpdateTask from "./UpdateTask";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 const TaskManagement = () => {
   const [data, refetch, isLoading] = useGetTask();
@@ -22,6 +23,11 @@ const TaskManagement = () => {
       .then((res) => {
         console.log(res);
         refetch();
+        Swal.fire({
+            title: "Deleted successful",
+            icon: "success",
+            draggable: true
+          });
       })
       .catch((error) => {
         console.log(error);
@@ -38,7 +44,7 @@ const TaskManagement = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 text-black lg:grid-cols-3 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-2 text-white lg:grid-cols-3 gap-5">
       <dialog id="my_modal_5" className="modal">
         <div className="modal-box w-11/12 max-w-5xl">
           <UpdateTask
@@ -55,7 +61,7 @@ const TaskManagement = () => {
         </div>
       </dialog>
       <div className="border rounded-xl">
-        <div className="bg-gray-400 py-5 rounded-xl">
+        <div className="bg-gray-700 py-5 rounded-xl">
           <h1 className="text-2xl font-bold uppercase flex items-center gap-2 justify-center">
             <PiTargetBold /> To Do
           </h1>
@@ -73,7 +79,7 @@ const TaskManagement = () => {
         </div>
       </div>
       <div className="border rounded-xl">
-        <div className="bg-gray-400 py-5 rounded-xl">
+        <div className="bg-gray-700 py-5 rounded-xl">
           <h1 className="text-2xl font-bold uppercase flex items-center gap-2 justify-center">
             <GrInProgress /> doing
           </h1>
@@ -91,7 +97,7 @@ const TaskManagement = () => {
         </div>
       </div>
       <div className="border rounded-xl">
-        <div className="bg-gray-400 py-5 rounded-xl">
+        <div className="bg-gray-700 py-5 rounded-xl">
           <h1 className="text-2xl font-bold uppercase flex items-center gap-2 justify-center">
             <MdOutlineDownloadDone /> done
           </h1>
