@@ -19,7 +19,7 @@ const TaskCard = ({ task, handleDelete, handleUpdateTask }) => {
         ref={setNodeRef}
         {...attributes}
         {...listeners}
-        className="border cursor-grab rounded-lg bg-gray-600 py-2 px-2 flex w-full  justify-between"
+        className="border touch-none cursor-grab rounded-lg bg-gray-600 py-2 px-2 flex w-full  justify-between"
       >
         <div className="flex-1">
           <h1 className=" font-bold text-2xl ">{taskName}</h1>
