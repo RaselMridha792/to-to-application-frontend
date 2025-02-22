@@ -1,33 +1,25 @@
-import { GrInProgress } from "react-icons/gr";
-import { MdOutlineDownloadDone } from "react-icons/md";
-import { PiTargetBold } from "react-icons/pi";
+
 import useGetTask from "../hooks/useGetTask";
-import TaskCard from "./TaskCard";
 import useAxiosPublic from "../hooks/useAxiosPublic";
 import { IoMdClose } from "react-icons/io";
 import UpdateTask from "./UpdateTask";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import {
-  arrayMove,
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { closestCorners, DndContext, PointerSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
+import { BsFillTrash3Fill } from "react-icons/bs";
+import { TiEdit } from "react-icons/ti";
 
 const TaskManagement = () => {
   const [data, refetch, isLoading] = useGetTask();
   const [newData, setNewData] = useState([]);
 
   useEffect(() => {
-    if (data) {
+    if (Array.isArray(data)) {
       setNewData(data);
     }
-  },[data]);
+  }, [data]);
+  console.log(newData);
   const axiosPublic = useAxiosPublic();
-  const toDoData = newData?.filter((datas) => datas.category == "to do");
-  const pendingData = newData?.filter((datas) => datas.category == "pending");
-  const doneData = newData?.filter((datas) => datas.category == "done");
   const [updateTaskId, setUpdateTaskId] = useState(null);
   const handleDelete = (id) => {
     console.log("called delete", id);
@@ -61,29 +53,79 @@ const TaskManagement = () => {
     setUpdateTaskId(null);
   };
 
+  // const getDataPosition = (id) =>
+  //   newData.findIndex((newDatas) => newDatas._id === id);
+  const onDragEnd = async (result) => {
+    if (!result.destination) return;
 
-  const getDataPosition = id => newData.findIndex(newDatas => newDatas._id === id)
+    const { source, destination, draggableId } = result;
+    const taskId = draggableId;
 
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-    if (active.id === over.id) return;
+    const updatedTasks = [...newData];
+    const draggedTask = updatedTasks.find((task) => task._id === taskId);
 
-    setNewData( newData =>{
-      const originalPosition = getDataPosition(active.id)
-      const newPosition = getDataPosition(over.id)
+    if (!draggedTask) return;
 
-      return arrayMove(newData, originalPosition, newPosition);
-    })
+    if (source.droppableId === destination.droppableId) {
+      // Reorder within the same category
+      const categoryTasks = updatedTasks
+        .filter((task) => task.category === source.droppableId)
+        .sort((a, b) => a.order - b.order);
+
+      // Remove the dragged task
+      const [movedTask] = categoryTasks.splice(source.index, 1);
+      categoryTasks.splice(destination.index, 0, movedTask);
+
+      // Assign new order values
+      categoryTasks.forEach((task, index) => {
+        task.order = index;
+      });
+
+      // Update the newData state with the new order
+      const newnewData = updatedTasks.map((task) => {
+        const updatedTask = categoryTasks.find((t) => t._id === task._id);
+        return updatedTask ? updatedTask : task;
+      });
+
+      setNewData(newnewData);
+
+      try {
+        await axios.put("http://localhost:5000/tasks/reorder", {
+          tasks: categoryTasks,
+        });
+        console.log("Reorder success!");
+      } catch (error) {
+        console.error("Failed to reorder tasks:", error);
+      }
+    } else {
+      // Move to another category
+      const movedTasks = updatedTasks.map((task) =>
+        task._id === taskId
+          ? {
+              ...task,
+              category: destination.droppableId,
+              order: destination.index,
+            }
+          : task
+      );
+
+      setNewData(movedTasks);
+
+      try {
+        await axios.put(`http://localhost:5000/tasks/${taskId}`, {
+          category: destination.droppableId,
+          order: destination.index,
+        });
+        console.log("Task category updated successfully!");
+      } catch (error) {
+        console.error("Failed to update task category:", error);
+      }
+    }
   };
 
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(TouchSensor)
-  )
-
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCorners}  onDragEnd={handleDragEnd}>
-      <div className="grid grid-cols-1 md:grid-cols-2 text-white lg:grid-cols-3 gap-5">
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         <dialog id="my_modal_5" className="modal">
           <div className="modal-box w-11/12 max-w-5xl">
             <UpdateTask
@@ -99,87 +141,59 @@ const TaskManagement = () => {
             </div>
           </div>
         </dialog>
-        <div className="border rounded-xl">
-          <div className="bg-gray-700 py-5 rounded-xl">
-            <h1 className="text-2xl font-bold uppercase flex items-center gap-2 justify-center">
-              <PiTargetBold /> To Do
-            </h1>
-          </div>
-
-          {/* tasks column  */}
-          <div className="flex flex-col gap-3 mt-5">
-            <SortableContext
-              items={
-                Array.isArray(toDoData) ? toDoData.map((task) => task._id) : []
-              }
-              strategy={verticalListSortingStrategy}
-            >
-              {!isLoading &&
-                toDoData?.map((task) => (
-                  <TaskCard
-                    handleUpdateTask={handleUpdateTask}
-                    key={task._id}
-                    task={task}
-                    handleDelete={handleDelete}
-                  ></TaskCard>
-                ))}
-            </SortableContext>
-          </div>
-        </div>
-        <div className="border rounded-xl">
-          <div className="bg-gray-700 py-5 rounded-xl">
-            <h1 className="text-2xl font-bold uppercase flex items-center gap-2 justify-center">
-              <GrInProgress /> doing
-            </h1>
-          </div>
-          <div className="flex flex-col gap-3 mt-5">
-            <SortableContext
-              items={
-                Array.isArray(pendingData)
-                  ? pendingData.map((task) => task._id)
-                  : []
-              }
-              strategy={verticalListSortingStrategy}
-            >
-              {!isLoading &&
-                pendingData?.map((task) => (
-                  <TaskCard
-                    handleUpdateTask={handleUpdateTask}
-                    key={task._id}
-                    task={task}
-                    handleDelete={handleDelete}
-                  ></TaskCard>
-                ))}
-            </SortableContext>
-          </div>
-        </div>
-        <div className="border rounded-xl">
-          <div className="bg-gray-700 py-5 rounded-xl">
-            <h1 className="text-2xl font-bold uppercase flex items-center gap-2 justify-center">
-              <MdOutlineDownloadDone /> done
-            </h1>
-          </div>
-          <div className="flex flex-col gap-3 mt-5">
-            <SortableContext
-              items={
-                Array.isArray(doneData) ? doneData.map((task) => task._id) : []
-              }
-              strategy={verticalListSortingStrategy}
-            >
-              {!isLoading &&
-                doneData?.map((task) => (
-                  <TaskCard
-                    handleUpdateTask={handleUpdateTask}
-                    key={task._id}
-                    task={task}
-                    handleDelete={handleDelete}
-                  ></TaskCard>
-                ))}
-            </SortableContext>
-          </div>
-        </div>
+        {["to do", "pending", "done"].map((category) => (
+          <Droppable key={category} droppableId={category}>
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className="bg-gray-600 p-4 rounded-lg shadow-md"
+              >
+                <h1 className="text-3xl text-white text-center py-3 font-bold uppercase">{category}</h1>
+                {newData
+                  .filter((task) => task.category === category)
+                  .sort((a, b) => a.order - b.order)
+                  .map((task, index) => (
+                    <Draggable
+                      key={task._id}
+                      draggableId={task._id}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="py-2 px-3 bg-gray-500 text-white rounded-md shadow mb-2 flex justify-between items-center"
+                        >
+                          <div>
+                            <strong className="block text-2xl">
+                              {task.taskName}
+                            </strong>
+                            <strong className="block">{task.date}</strong>
+                            <p className="text-lg py-1">
+                              {task.description}
+                            </p>
+                          </div>
+                          <div className="flex gap-2">
+                            <button onClick={()=>handleUpdateTask(task._id)} className="text-lg btn btn-warning btn-sm">
+                              <TiEdit />
+                            </button>
+                            <button onClick={()=>handleDelete(task._id)} className="btn btn-error btn-sm">
+                              <BsFillTrash3Fill />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        ))}
       </div>
-    </DndContext>
+    </DragDropContext>
   );
 };
 

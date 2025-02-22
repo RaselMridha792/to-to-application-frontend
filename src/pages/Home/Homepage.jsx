@@ -7,7 +7,7 @@ import useAxiosPublic from "../../hooks/useAxiosPublic";
 import Swal from "sweetalert2";
 import TaskManagement from "../../components/TaskManagement";
 import useGetTask from "../../hooks/useGetTask";
-import { closestCorners, DndContext } from "@dnd-kit/core";
+import {DndContext } from "@dnd-kit/core";
 
 const Homepage = () => {
   const { user } = useContext(AuthContext);

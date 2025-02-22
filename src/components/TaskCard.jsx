@@ -6,7 +6,7 @@ const TaskCard = ({ task, handleDelete, handleUpdateTask }) => {
   const { taskName, description, date, _id } = task;
 
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: _id });
+    useSortable({ id: _id});
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
@@ -19,16 +19,18 @@ const TaskCard = ({ task, handleDelete, handleUpdateTask }) => {
         ref={setNodeRef}
         {...attributes}
         {...listeners}
-        className="border touch-none cursor-grab rounded-lg bg-gray-600 py-2 px-2 flex w-full  justify-between"
+        className="border cursor-grab rounded-lg bg-gray-600 py-2 px-2 flex w-full  justify-between"
       >
-        <div className="flex-1">
-          <h1 className=" font-bold text-2xl ">{taskName}</h1>
-          <p className="text-sm">{date}</p>
-          <p>{description}</p>
+        <div className="flex-1 touch-none w-full">
+          <div className="">
+            <h1 className=" overflow-x-auto font-bold text-2xl ">{taskName}</h1>
+            <p className="text-sm">{date}</p>
+            <p>{description}</p>
+          </div>
         </div>
-        <div className="space-x-2">
+        <div className="flex gap-3">
           <button
-            onPointerDown={(e) => e.stopPropagation()}  
+            onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => {
               e.stopPropagation();
               handleDelete(_id);
