@@ -90,7 +90,7 @@ const TaskManagement = () => {
       setNewData(newnewData);
 
       try {
-        await axios.put("http://localhost:5000/tasks/reorder", {
+        await axiosPublic.put("/tasks/reorder", {
           tasks: categoryTasks,
         });
         console.log("Reorder success!");
@@ -112,11 +112,12 @@ const TaskManagement = () => {
       setNewData(movedTasks);
 
       try {
-        await axios.put(`http://localhost:5000/tasks/${taskId}`, {
+        await axiosPublic.put(`/tasks/${taskId}`, {
           category: destination.droppableId,
           order: destination.index,
         });
         console.log("Task category updated successfully!");
+        refetch();
       } catch (error) {
         console.error("Failed to update task category:", error);
       }
