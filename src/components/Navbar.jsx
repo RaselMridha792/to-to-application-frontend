@@ -25,14 +25,14 @@ const Navbar = () => {
   }
   return (
     <>
-      <div className="bg-orange-300">
+      <div className="bg-gray-600">
         <div
           className={`navbar max-w-screen-2xl mx-auto ${
             changeColor ? "text-black" : "text-white"
           }`}
         >
           <div className="navbar-start">
-            <a className="btn btn-ghost text-xl">Task Management</a>
+            <a className="btn btn-ghost text-xl text-white">Task Management</a>
           </div>
           <div className="navbar-end gap-5">
             <input
