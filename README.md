@@ -74,5 +74,6 @@ This is a Task Management Application that allows users to manage their tasks in
 ### Frontend
 1. Clone the frontend repository.
    ```bash
-   git clone https://github.com/yourusername/frontend-repo.git
+   git clone https://github.com/RaselMridha792/to-to-application-frontend
    cd frontend-repo
+   npm i 
