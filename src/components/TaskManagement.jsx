@@ -18,7 +18,6 @@ const TaskManagement = () => {
       setNewData(data);
     }
   }, [data]);
-  console.log(newData);
   const axiosPublic = useAxiosPublic();
   const [updateTaskId, setUpdateTaskId] = useState(null);
   const handleDelete = (id) => {
@@ -52,9 +51,6 @@ const TaskManagement = () => {
     document.getElementById("my_modal_5").close();
     setUpdateTaskId(null);
   };
-
-  // const getDataPosition = (id) =>
-  //   newData.findIndex((newDatas) => newDatas._id === id);
   const onDragEnd = async (result) => {
     if (!result.destination) return;
 
@@ -92,10 +88,14 @@ const TaskManagement = () => {
       try {
         await axiosPublic.put("/tasks/reorder", {
           tasks: categoryTasks,
-        });
+        }).then(result =>{
+          console.log(result)
+        }).catch(error =>{
+          console.log(error.message, 'under the sending data')
+        })
         console.log("Reorder success!");
       } catch (error) {
-        console.error("Failed to reorder tasks:", error);
+        console.error("Failed to reorder tasks:", error.message);
       }
     } else {
       // Move to another category
